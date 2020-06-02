@@ -1,0 +1,195 @@
+DROP DATABASE IF EXISTS wildberries_project;
+CREATE DATABASE wildberries_project;
+
+USE wildberries_project;
+
+# Разделы интернет-магазина
+DROP TABLE IF EXISTS catalogs;
+CREATE TABLE catalogs (
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name_catalog VARCHAR(255) NOT NULL,
+   created_at DATE NOT NULL,
+   updated_at DATE NOT NULL
+);
+
+# Подразделы каталога интернет-магазина
+DROP TABLE IF EXISTS categories;
+CREATE TABLE categories(
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   catalog_id INT UNSIGNED NOT NULL,
+   name_category VARCHAR(255) NOT NULL,
+   created_at DATE NOT NULL,
+   updated_at DATE NOT NULL
+);
+
+# Товарные позиции
+DROP TABLE IF EXISTS products;
+CREATE TABLE products (
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(150),
+   description TEXT, 
+   price DECIMAL (11,2), 
+   catalog_id INT UNSIGNED NOT NULL, 
+   category_id INT UNSIGNED NOT NULL,
+   media_id INT UNSIGNED, 
+   manufacture_id INT UNSIGNED, 
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+   KEY index_of_catalog_id (catalog_id),
+   KEY index_of_category_id (category_id),
+   KEY index_of_media_id (media_id),
+   KEY index_of_manufacture_id (manufacture_id)
+);
+
+# Производитель
+DROP TABLE IF EXISTS manufacture;
+CREATE TABLE manufacturer(
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name VARCHAR(150) NOT NULL,
+   description TEXT,
+   logo_id INT UNSIGNED 
+);
+
+# Покупатели
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   login VARCHAR(100) NOT NULL UNIQUE,
+   pass VARCHAR(100) NOT NULL,
+   birthday DATE,
+   gender VARCHAR(5) NOT NULL,
+   email VARCHAR(100) NOT NULL UNIQUE, 
+   phone VARCHAR(100) NOT NULL UNIQUE,
+   city VARCHAR(50) NOT NULL,
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+# Заказы
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders (
+   id SERIAL PRIMARY KEY,
+   user_id INT UNSIGNED,
+   status_id INT UNSIGNED,
+   ship_name VARCHAR(60) NOT NULL,
+   ship_address VARCHAR(80) NOT NULL,
+   ship_city VARCHAR(30) NOT NULL,
+   ship_country VARCHAR(20) NOT NULL,
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP, # Время создания
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP # Время обновления
+); 
+
+# Статутс заказа (открыт, резерв, собран, у курьера, готов к получению)
+CREATE TABLE order_statuses(
+   id SERIAL PRIMARY KEY,
+   name_status VARCHAR(20) NOT NULL
+);
+
+# Состав заказа 
+DROP TABLE IF EXISTS orders_products;
+CREATE TABLE orders_products (
+   id SERIAL PRIMARY KEY,
+   order_id INT UNSIGNED,
+   product_id INT UNSIGNED,
+   total_quanity INT UNSIGNED DEFAULT 1, # Количество товаров в корзине
+   total_price INT UNSIGNED,  # сумма к оплате
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP, # Время создания
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP # Время обновления
+); 
+
+
+
+# Скидки
+DROP TABLE IF EXISTS discounts;
+CREATE TABLE discounts (
+   id SERIAL PRIMARY KEY,
+   order_id INT UNSIGNED,
+   product_id INT UNSIGNED,
+   discount FLOAT UNSIGNED, #Величина скидки от 0.0 до 1.0
+   started_et DATETIME, 
+   finished_at DATETIME,
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP, # Время создания
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP # Время обновления
+ ); 
+ 
+ # Склады
+DROP TABLE IF EXISTS storehouses;
+CREATE TABLE storehouses(
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(255), # Название
+   address VARCHAR(255),
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP, # Время создания
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP # Время обновления
+ );
+ 
+# Запасы на складе
+DROP TABLE IF EXISTS storehouses_products;
+CREATE TABLE storehouses_products(
+   id SERIAL PRIMARY KEY,
+   storehouse_id INT UNSIGNED,
+   product_id INT UNSIGNED,
+   value INT UNSIGNED, #Запас товарной позиции на складе
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP, # Время создания
+   update_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP # Время обновления
+ );
+
+
+# Таблица с избранными товарами. 
+DROP TABLE IF EXISTS favorites;
+CREATE TABLE favorites(
+   id SERIAL PRIMARY KEY,
+   product_id INT UNSIGNED,
+   user_id INT UNSIGNED,
+   favor TINYINT(1) DEFAULT 0,
+   requsted_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
+   confirme_at DATETIME DEFAULT NULL
+);
+
+# Таблица с фото товаров и лого производителей.
+DROP TABLE IF EXISTS media;
+CREATE TABLE media(
+   id SERIAL PRIMARY KEY,
+   media_type_id INT UNSIGNED NOT NULL,
+   product_id INT UNSIGNED NOT NULL,
+   filename VARCHAR(255) NOT NULL,
+   size_f INT NOT NULL,
+   metadata VARCHAR(255) NOT NULL,
+   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS media_types;
+CREATE TABLE media_types(
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+);
+
+# Таблица с пунктами выдачи
+DROP TABLE IF EXISTS delivery;
+CREATE TABLE delivery(
+   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   address VARCHAR(255) NOT NULL,
+   time_opening TIME,
+   time_closing TIME,
+   phone VARCHAR(100) NOT NULL UNIQUE
+);
+
+# Администраторы
+DROP TABLE IF EXISTS admins;
+CREATE TABLE admins(
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  admin_login VARCHAR(16) NOT NULL UNIQUE,
+  pass VARCHAR(40) NOT NULL
+);
+
+# Обращения пользователей
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages (
+   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   from_user_id INT(10) UNSIGNED NOT NULL,
+   to_admin_id INT(10) UNSIGNED NOT NULL,
+   body TEXT NOT NULL,
+   is_decided TINYINT(1) DEFAULT NULL,
+   is_delivered TINYINT(1) DEFAULT NULL,
+   created_at datetime DEFAULT current_timestamp()
+);
