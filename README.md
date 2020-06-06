@@ -19,6 +19,7 @@ https://github.com/chernova-ann/project_database/blob/master/fulldb_wildb.sql
 
 3. Обновленные данные в соответствии с тематикой интернет-магазина, создание внешних ключей и индексов.
 wild_di.sql
+https://github.com/chernova-ann/project_database/blob/master/wild_di.sql
 
 4. ERDiagram для БД
 ERDiagram_wbs.png
