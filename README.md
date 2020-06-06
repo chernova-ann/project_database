@@ -10,7 +10,7 @@
 
 В курсовой проект входят следующие файлы.
 1. Табличная структура базы данных.
-wildberries_project.sql
+wildberries_project.sql https://github.com/chernova-ann/project_database/blob/master/wildberries_project
 
 2. Дамп базы данных заполенным генератором данных.
 fulldb_wildb.sql
