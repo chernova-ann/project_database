@@ -23,20 +23,20 @@ https://github.com/chernova-ann/project_database/blob/master/wild_di.sql
 
 4. ERDiagram для БД
 ERDiagram_wbs.png
+https://github.com/chernova-ann/project_database/blob/master/ERDiagram_wbs.png
 
 5. Запросы, Join, группировки, оконные функции.
 wlb_select.sql
+https://github.com/chernova-ann/project_database/blob/master/wlb_select.sql
 
 6. Представления
 wlb_view.sql
+https://github.com/chernova-ann/project_database/blob/master/wlb_view.sql
 
 7. Триггеры, процедуры
 wlb_trigger.sql
+https://github.com/chernova-ann/project_database/blob/master/wlb_trigger.sql
 
 8. Итоговый дамп базы данных.
 wldb_pro_dump.sql
-
-
-
-
-
+https://github.com/chernova-ann/project_database/blob/master/wldb_pro_dump.sql
